@@ -1,10 +1,7 @@
 var roadUtils = require('utils.road');
 
 var roleBuilder = {
-
-    /** @param {Creep} creep **/
     run: function(creep) {
-	roadUtils.make_road_if_useful(creep);
 	var num_harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
 	if (num_harvesters.length < 3) {
 	    creep.memory.role = 'harvester';
