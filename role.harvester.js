@@ -1,4 +1,5 @@
 var roadUtils = require('utils.road');
+var config = require('config');
 
 var roleHarvester = {
     run: function(creep) {
@@ -21,7 +22,7 @@ var roleHarvester = {
                 } else {
                     if (targets[0] == Game.spawns['Hejmo']) {
                         if (creep.ticksToLive < 200) {
-                            if (creep.body.length > 3) {
+                            if (creep.body.length == config.CREEP_RECIPE.length) {
                                 Game.spawns['Hejmo'].renewCreep(creep);
                             }
                         }

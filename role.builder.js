@@ -1,3 +1,4 @@
+var config = require('config');
 var roadUtils = require('utils.road');
 
 var roleBuilder = {
@@ -43,7 +44,7 @@ var roleBuilder = {
                 if (spawn.transferEnergy(creep, creep.carryCapacity) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(spawn);
                 } else {
-                    if (creep.body.length > 3) {
+                    if (creep.body.length == config.CREEP_RECIPE.length) {
                         spawn.renewCreep(creep);
                     }
                 }
