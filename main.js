@@ -1,10 +1,11 @@
+var config = require('config');
 var memoryUtils = require('utils.memory');
+var roadUtils = require('utils.road');
 var roleBuilder = require('role.builder');
 var roleHarvester = require('role.harvester');
 var roleUniversal = require('role.universal');
 var roleUtils = require('utils.role');
 var towerFirer = require('towerFirer');
-var config = require('config');
 
 module.exports.loop = function() {
     memoryUtils.clear();
