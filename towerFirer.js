@@ -1,4 +1,4 @@
-towerFirer = {
+var towerFirer = {
     fire: function(roomName) {
         var towers = Game.rooms[roomName].find(FIND_STRUCTURES, {
             filter: (s) => s.structureType == STRUCTURE_TOWER
@@ -10,6 +10,6 @@ towerFirer = {
             }
         }
     }
-}
+};
 
 module.exports = towerFirer;

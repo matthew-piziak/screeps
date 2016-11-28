@@ -9,4 +9,4 @@ var memoryUtils = {
     }
 };
 
-module.exports = memoryUtils
+module.exports = memoryUtils;

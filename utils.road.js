@@ -2,7 +2,7 @@ var roadUtils = {
     next_road_to_decay: function() {
         var roads = Game.rooms['E1N68'].find(FIND_STRUCTURES, {
             filter: (structure) => {
-                return structure.structureType == STRUCTURE_ROAD
+                return structure.structureType == STRUCTURE_ROAD;
             }
         });
         let lowest_health = 5000;
@@ -13,8 +13,8 @@ var roadUtils = {
                 lowest_health = road.hits;
                 worst_road = road;
             }
-        })
-        return worst_road
+        });
+        return worst_road;
     },
 
     make_road_if_useful: function(creep) {
@@ -22,7 +22,7 @@ var roadUtils = {
         if (structures.length == 0) {
             var ticksOnLand;
             var roadCost;
-            var terrain = creep.room.lookForAt(LOOK_TERRAIN, creep.pos)
+            var terrain = creep.room.lookForAt(LOOK_TERRAIN, creep.pos);
             if (terrain == "swamp") {
                 ticksOnLand = 4;
                 roadCost = 1500;
@@ -48,10 +48,10 @@ var roadUtils = {
             } else {
                 var newFlagName = creep.room.createFlag(creep.pos);
                 flag = Game.flags[newFlagName];
-                flag.memory.lastTimeTouched = Game.time
+                flag.memory.lastTimeTouched = Game.time;
             }
         }
     }
 };
 
-module.exports = roadUtils
+module.exports = roadUtils;

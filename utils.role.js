@@ -10,4 +10,4 @@ var roleUtils = {
     }
 };
 
-module.exports = roleUtils
+module.exports = roleUtils;

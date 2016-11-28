@@ -2,7 +2,7 @@ var roleHarvester = require('role.harvester');
 var roleBuilder = require('role.builder');
 var memoryUtils = require('utils.memory');
 var roleUtils = require('utils.role');
-var towerFirer = require('towerFirer')
+var towerFirer = require('towerFirer');
 
 module.exports.loop = function() {
     memoryUtils.clear();
