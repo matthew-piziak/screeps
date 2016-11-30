@@ -9,17 +9,22 @@ var roleBuilder = {
             CHARGING: 3
         };
         var num_harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
-        if (num_harvesters.length < 3) {
+        if (num_harvesters.length < config.NUM_HARVESTERS) {
             creep.memory.role = 'harvester';
             return;
         }
-        Game.rooms[creep.pos.roomName].createConstructionSite(creep.pos.x, creep.pos.y, STRUCTURE_ROAD);
         if (creep.carry.energy == 0) {
             creep.memory.action = Action.CHARGING;
             creep.say('charging');
         }
         if (creep.carry.energy == creep.carryCapacity) {
-            if (creep.room.find(FIND_CONSTRUCTION_SITES).length == 0) {
+            var targets = [];
+            config.TARGET_ROOMS.forEach((r) => {
+                if (Game.rooms[r]) {
+                    targets = targets.concat(Game.rooms[r].find(FIND_CONSTRUCTION_SITES));
+                }
+            });
+            if (targets.length == 0) {
                 creep.memory.action = Action.UPGRADING;
                 creep.say('upgrading');
             } else {
@@ -28,25 +33,32 @@ var roleBuilder = {
             }
         }
         if (creep.memory.action == Action.BUILDING) {
-            var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
+            var targets = [];
+            config.TARGET_ROOMS.forEach((r) => {
+                if (Game.rooms[r]) {
+                    targets = targets.concat(Game.rooms[r].find(FIND_CONSTRUCTION_SITES));
+                }
+            });
             if (targets.length) {
-                if (creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(targets[0]);
+                var target = creep.pos.findClosestByRange(targets);
+                if (!target) { // off map or not accessible
+                    target = targets[0];
+                }
+                if (creep.build(target) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(target);
                 }
             }
         } else if (creep.memory.action == Action.UPGRADING) {
             if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(creep.room.controller);
             }
-        } else {
+        } else { // CHARGING
             var spawn = Game.spawns['Hejmo'];
-            if (spawn.energy > 0) {
-                if (spawn.transferEnergy(creep, creep.carryCapacity) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(spawn);
-                } else {
-                    if (creep.body.length == config.CREEP_RECIPE.length) {
-                        spawn.renewCreep(creep);
-                    }
+            if (spawn.transferEnergy(creep, creep.carryCapacity) < 0) {
+                creep.moveTo(spawn);
+            } else {
+                if (creep.body.length == config.CREEP_RECIPE.length) {
+                    spawn.renewCreep(creep);
                 }
             }
         }
