@@ -37,4 +37,8 @@ module.exports.loop = function() {
             roleRecon.run(creep);
         }
     }
+
+    var linkFrom = Game.spawns['Hejmo'].room.lookForAt('structure', 33, 46)[0];
+    var linkTo = Game.spawns['Hejmo'].room.lookForAt('structure', 44, 29)[0];
+    linkFrom.transferEnergy(linkTo);
 };
