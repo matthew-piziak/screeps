@@ -2,6 +2,11 @@ var config = require('config');
 
 var roleUpgrader = {
     run: function(creep) {
+        var num_harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
+        if (num_harvesters.length < 1) {
+            creep.memory.role = 'harvester';
+            return;
+        }
         var Action = {
             UPGRADING: 2,
             CHARGING: 3

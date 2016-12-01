@@ -3,37 +3,32 @@ var _ = require('lodash');
 
 var sandbox = {
     get_dispatched_source: function(creep) {
-        var rooms = config.TARGET_ROOMS;
-        var energySources = [];
-        rooms.forEach((r) => {
-            if (Game.rooms[r]) {
-                var sources = Game.rooms[r].find(FIND_SOURCES);
-                sources = _.filter(sources, (s) => {
-                    return (s.energy != 0);
-                });
-                sources = _.filter(sources, function(source) {
-                    return emptySpaces(r, source.pos) > 0;
-                });
-                energySources = energySources.concat(sources);
-            }
-        });
-        var closest_in_room = creep.pos.findClosestByRange(energySources);
-        if (closest_in_room) {
-            return closest_in_room;
-        } else {
-            return energySources[0];
+        var sources;
+        let local_room = creep.room;
+        let local_sources = local_room.find(FIND_SOURCES);
+        if (local_sources) {
+            sources = local_sources;
         }
+        sources = _.filter(sources, (s) => {
+            return (s.energy != 0);
+        });
+        sources = _.filter(sources, function(source) {
+            return emptySpaces(local_room, source.pos) > 0;
+        });
+        return creep.pos.findClosestByPath(sources);
     }
 };
 
 var emptySpaces = function(room, position) {
     var spaces = 0;
-    var tiles = Game.rooms[room].lookAtArea(0, 0, 49, 49);
-    for (var x = position.x - 1; x < position.x + 1; x++)
-        for (var y = position.y - 1; y < position.y + 1; y++)
+    var tiles = room.lookAtArea(0, 0, 49, 49);
+    for (var x = position.x - 1; x <= position.x + 1; x++)
+        for (var y = position.y - 1; y <= position.y + 1; y++) {
+            console.log(x + "," + y);
             if (isPassable(tiles[y][x])) {
                 spaces++;
             }
+        }
     return spaces;
 };
 

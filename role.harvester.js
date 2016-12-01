@@ -4,12 +4,12 @@ var sandbox = require('sandbox');
 
 var roleHarvester = {
     run: function(creep) {
-	if (creep.carry.energy == 0) {
-	    creep.memory.harvesting = true;
-	}
-	if (creep.carry.energy == creep.carryCapacity) {
-	    creep.memory.harvesting = false;
-	}
+        if (creep.carry.energy == 0) {
+            creep.memory.harvesting = true;
+        }
+        if (creep.carry.energy == creep.carryCapacity) {
+            creep.memory.harvesting = false;
+        }
         if (creep.memory.harvesting) {
             if (!creep.memory.assigned_source) {
                 if (!sandbox.get_dispatched_source(creep)) {
@@ -29,14 +29,16 @@ var roleHarvester = {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_EXTENSION ||
                         structure.structureType == STRUCTURE_SPAWN ||
-                        structure.structureType == STRUCTURE_TOWER) && structure.energy < structure.energyCapacity;
+                        structure.structureType == STRUCTURE_TOWER ||
+                        structure.structureType == STRUCTURE_LINK) && structure.energy < structure.energyCapacity;
                 }
             });
             if (targets.length > 0) {
-                if (creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(targets[0]);
+		var best_target = creep.pos.findClosestByPath(targets);
+                if (creep.transfer(best_target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(best_target);
                 } else {
-                    if (targets[0] == Game.spawns['Hejmo']) {
+                    if (best_target == Game.spawns['Hejmo']) {
                         if (creep.ticksToLive < 200) {
                             if (creep.body.length == config.CREEP_RECIPE.length) {
                                 Game.spawns['Hejmo'].renewCreep(creep);

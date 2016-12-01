@@ -13,8 +13,9 @@ var towerFirer = require('towerFirer');
 module.exports.loop = function() {
     memoryUtils.clear();
 
-    Memory.home = 'E1N68';
-    towerFirer.fire(Memory.home);
+    // config.TARGET_ROOMS.forEach((roomName) => {
+    //     towerFirer.fire(Memory.roomName);
+    // });
 
     roleUtils.maintain('builder', config.NUM_BUILDERS);
     roleUtils.maintain('harvester', config.NUM_HARVESTERS);
@@ -40,5 +41,7 @@ module.exports.loop = function() {
 
     var linkFrom = Game.spawns['Hejmo'].room.lookForAt('structure', 33, 46)[0];
     var linkTo = Game.spawns['Hejmo'].room.lookForAt('structure', 44, 29)[0];
-    linkFrom.transferEnergy(linkTo);
+    if (linkFrom && linkTo) {
+        linkFrom.transferEnergy(linkTo);
+    }
 };
