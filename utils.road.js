@@ -34,7 +34,7 @@ var roadUtils = {
                     roadCost = 300;
                 }
                 var carryCapacity = creep.carryCapacity;
-                var roadLifetime = 500000;
+                var roadLifetime = 50000;
                 var touched_twice_road_breakeven = (roadLifetime / (roadCost / carryCapacity)) * (ticksOnLand / 2);
 
                 var tileFlags = creep.room.lookForAt(LOOK_FLAGS, creep.pos);
