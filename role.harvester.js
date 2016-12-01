@@ -1,6 +1,6 @@
 var roadUtils = require('utils.road');
 var config = require('config');
-var sandbox = require('sandbox');
+var dispatcher = require('dispatcher');
 
 var roleHarvester = {
     run: function(creep) {
@@ -12,10 +12,10 @@ var roleHarvester = {
         }
         if (creep.memory.harvesting) {
             if (!creep.memory.assigned_source) {
-                if (!sandbox.get_dispatched_source(creep)) {
+                if (!dispatcher.get_dispatched_source(creep)) {
                     creep.say("waiting");
                 } else {
-                    creep.memory.assigned_source = sandbox.get_dispatched_source(creep).id;
+                    creep.memory.assigned_source = dispatcher.get_dispatched_source(creep).id;
                     creep.say("new source: " + creep.memory.assigned_source);
                 }
             } else {

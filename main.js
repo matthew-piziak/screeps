@@ -3,15 +3,19 @@ var memoryUtils = require('utils.memory');
 var roadUtils = require('utils.road');
 var roleBuilder = require('role.builder');
 var roleHarvester = require('role.harvester');
-var roleUpgrader = require('role.upgrader');
-var roleRecon = require('role.recon');
 var roleUniversal = require('role.universal');
 var roleUtils = require('utils.role');
-var sandbox = require('sandbox');
+var dispatcher = require('dispatcher');
 var towerFirer = require('towerFirer');
 
 module.exports.loop = function() {
     memoryUtils.clear();
+
+    var mainSpawn = Game.spawns['Hejmo'];
+    var mainController = mainSpawn.room.controller;
+    if ((mainSpawn.hits < (mainSpawn.maxHits / 2)) && mainController.safeModeAvailable) {
+	mainController.activateSafeMode();
+    }
 
     // config.TARGET_ROOMS.forEach((roomName) => {
     //     towerFirer.fire(Memory.roomName);
@@ -19,8 +23,6 @@ module.exports.loop = function() {
 
     roleUtils.maintain('builder', config.NUM_BUILDERS);
     roleUtils.maintain('harvester', config.NUM_HARVESTERS);
-    roleUtils.maintain('recon', config.NUM_RECON);
-    roleUtils.maintain('upgrader', config.NUM_UPGRADERS);
 
     for (var name in Game.creeps) {
         var creep = Game.creeps[name];
@@ -30,12 +32,6 @@ module.exports.loop = function() {
         }
         if (creep.memory.role == 'builder') {
             roleBuilder.run(creep);
-        }
-        if (creep.memory.role == 'upgrader') {
-            roleUpgrader.run(creep);
-        }
-        if (creep.memory.role == 'recon') {
-            roleRecon.run(creep);
         }
     }
 

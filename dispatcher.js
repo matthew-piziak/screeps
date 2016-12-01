@@ -1,7 +1,7 @@
 var config = require('config');
 var _ = require('lodash');
 
-var sandbox = {
+var dispatcher = {
     get_dispatched_source: function(creep) {
         var sources;
         let local_room = creep.room;
@@ -15,7 +15,7 @@ var sandbox = {
         sources = _.filter(sources, function(source) {
             return emptySpaces(local_room, source.pos) > 0;
         });
-        return creep.pos.findClosestByPath(sources);
+	return creep.pos.findClosestByPath(sources);
     }
 };
 
@@ -24,7 +24,6 @@ var emptySpaces = function(room, position) {
     var tiles = room.lookAtArea(0, 0, 49, 49);
     for (var x = position.x - 1; x <= position.x + 1; x++)
         for (var y = position.y - 1; y <= position.y + 1; y++) {
-            console.log(x + "," + y);
             if (isPassable(tiles[y][x])) {
                 spaces++;
             }
@@ -66,4 +65,4 @@ var isPassable = function(list) {
 };
 
 
-module.exports = sandbox;
+module.exports = dispatcher;

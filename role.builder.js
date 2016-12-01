@@ -24,7 +24,7 @@ var roleBuilder = {
                     targets = targets.concat(Game.rooms[r].find(FIND_CONSTRUCTION_SITES));
                 }
             });
-            if (targets.length == 0) {
+            if (targets.length == 0 || creep.room.controller.ticksToDowngrade < 2500) {
                 creep.memory.action = Action.UPGRADING;
                 creep.say('upgrading');
             } else {
