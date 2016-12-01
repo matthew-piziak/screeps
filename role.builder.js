@@ -33,13 +33,13 @@ var roleBuilder = {
             }
         }
         if (creep.memory.action == Action.BUILDING) {
-            var targets = [];
+            targets = [];
             config.TARGET_ROOMS.forEach((r) => {
                 if (Game.rooms[r]) {
                     targets = targets.concat(Game.rooms[r].find(FIND_CONSTRUCTION_SITES));
                 }
             });
-            if (targets.length) {
+            if (targets.length > 0) {
                 var target = creep.pos.findClosestByRange(targets);
                 if (!target) { // off map or not accessible
                     target = targets[0];
@@ -47,7 +47,9 @@ var roleBuilder = {
                 if (creep.build(target) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target);
                 }
-            }
+            } else {
+		creep.memory.action = Action.UPGRADING;
+	    }
         } else if (creep.memory.action == Action.UPGRADING) {
             if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(creep.room.controller);

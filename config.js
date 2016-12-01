@@ -1,7 +1,7 @@
 var config = {
     NUM_BUILDERS: 2,
     NUM_HARVESTERS: 4,
-    CREEP_RECIPE: [WORK, CARRY, MOVE],
+    CREEP_RECIPE: [WORK, WORK, CARRY, MOVE],
     TARGET_ROOMS: ['W12N69']
 };
 
