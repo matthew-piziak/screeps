@@ -13,17 +13,21 @@ var dispatcher = {
             return (s.energy != 0);
         });
         sources = _.filter(sources, function(source) {
-            return emptySpaces(local_room, source.pos) > 0;
+            return emptySpaces(local_room, source.pos, creep.pos) > 0;
         });
 	return creep.pos.findClosestByPath(sources);
     }
 };
 
-var emptySpaces = function(room, position) {
+var emptySpaces = function(room, sourcePos, creepPos) {
     var spaces = 0;
     var tiles = room.lookAtArea(0, 0, 49, 49);
-    for (var x = position.x - 1; x <= position.x + 1; x++)
-        for (var y = position.y - 1; y <= position.y + 1; y++) {
+    for (var x = sourcePos.x - 1; x <= sourcePos.x + 1; x++)
+        for (var y = sourcePos.y - 1; y <= sourcePos.y + 1; y++) {
+	    if (creepPos.x == x && creepPos.y == y) {
+		spaces++;
+		continue;
+	    }
             if (isPassable(tiles[y][x])) {
                 spaces++;
             }
