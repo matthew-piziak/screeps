@@ -42,7 +42,6 @@ var roleHarvester = {
 		creep.memory.action = Action.HARVESTING;
 	    }
 	} else {
-	    console.log("return");
             creep.memory.assignedSource = null;
 	    creep.memory.assignedExit = null;
             var targets = creep.room.find(FIND_STRUCTURES, {
@@ -67,7 +66,6 @@ var roleHarvester = {
                     }
                 }
             } else {
-		console.log("going home");
                 var target = Game.spawns['Hejmo'];
                 if (creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target);
