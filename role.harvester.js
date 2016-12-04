@@ -4,26 +4,36 @@ var dispatcher = require('dispatcher');
 
 var roleHarvester = {
     run: function(creep) {
+	var Action = {
+	    HARVESTING: 1,
+	    RETURNING: 2,
+	    MAYNARDING: 3
+	};
         if (creep.carry.energy == 0) {
-            creep.memory.harvesting = true;
+	    if (!creep.memory.assignedSource && !creep.memory.assignedExit) {
+		var localSource = dispatcher.getDispatchedLocalSource(creep);
+		if (localSource) {
+		    creep.memory.assignedSource = localSource.id;
+		    creep.memory.action = Action.HARVESTING;
+		    creep.say("harvest");
+		} else {
+		    creep.memory.assignedExit = dispatcher.getDispatchedExit(creep);
+		    creep.memory.action = Action.MAYNARDING;
+		    creep.say("maynard");
+		}
+	    }
         }
         if (creep.carry.energy == creep.carryCapacity) {
-            creep.memory.harvesting = false;
+	    creep.memory.actions = Action.RETURNING;
+	    creep.say("return");
         }
-        if (creep.memory.harvesting) {
-            if (!creep.memory.assignedSource) {
-                if (!dispatcher.getDispatchedSource(creep)) {
-                    creep.say("wait");
-                } else {
-                    creep.memory.assignedSource = dispatcher.getDispatchedSource(creep).id;
-                    creep.say("new source");
-                }
-            } else {
-                if (creep.harvest(Game.getObjectById(creep.memory.assignedSource)) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(Game.getObjectById(creep.memory.assignedSource));
-                }
+        if (creep.memory.action == Action.HARVESTING) {
+            if (creep.harvest(Game.getObjectById(creep.memory.assignedSource)) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(Game.getObjectById(creep.memory.assignedSource));
             }
-        } else {
+        } else if (creep.memory.action == Action.MAYNARDING) {
+	    creep.moveTo(creep.memory.assignedExit.x, creep.memory.assignedExit.y)
+	} else {
             creep.memory.assignedSource = null;
             var targets = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {

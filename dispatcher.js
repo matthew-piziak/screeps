@@ -2,25 +2,20 @@ var config = require('config');
 var _ = require('lodash');
 
 var dispatcher = {
-    getDispatchedSource: function(creep) {
+    getDispatchedLocalSource: function(creep) {
         var sources;
         var room;
         let localRoom = creep.room;
         let localSources = _.filter(localRoom.find(FIND_SOURCES), (s) => {
             return isAvailableSource(s, localRoom, creep);
         });
-        if (localSources) {
-            sources = localSources;
-            room = localRoom;
-        } else {
-            let remoteRoom = Game.rooms['W13N69'];
-            let remoteSources = _.filter(remoteRoom.find(FIND_SOURCES), (s) => {
-                return isAvailableSource(s, remoteRoom, creep);
-            });
-            sources = remoteSources;
-            room = remoteRoom;
-        };
         return creep.pos.findClosestByPath(sources);
+    },
+
+    getDispatchedExit: function(creep) {
+	var exitDir = Game.map.findExit(creep.room, 'W13N69');
+	var exitLoc = creep.pos.findClosestByRange(exitDir);
+	return exitLoc;
     }
 };
 
