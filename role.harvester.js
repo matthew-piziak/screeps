@@ -24,7 +24,7 @@ var roleHarvester = {
 	    }
         }
         if (creep.carry.energy == creep.carryCapacity) {
-	    creep.memory.actions = Action.RETURNING;
+	    creep.memory.action = Action.RETURNING;
 	    creep.say("return");
         }
         if (creep.memory.action == Action.HARVESTING) {
@@ -32,9 +32,19 @@ var roleHarvester = {
                 creep.moveTo(Game.getObjectById(creep.memory.assignedSource));
             }
         } else if (creep.memory.action == Action.MAYNARDING) {
-	    creep.moveTo(creep.memory.assignedExit.x, creep.memory.assignedExit.y)
+	    if (creep.memory.assignedExit) {
+		creep.moveTo(creep.memory.assignedExit.x, creep.memory.assignedExit.y);
+	    } else {
+		creep.memory.action = Action.HARVESTING;
+	    }
+	    if (creep.room.name == 'W13N69') {
+		creep.memory.assignedExit = null;
+		creep.memory.action = Action.HARVESTING;
+	    }
 	} else {
+	    console.log("return");
             creep.memory.assignedSource = null;
+	    creep.memory.assignedExit = null;
             var targets = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_EXTENSION ||
@@ -57,6 +67,7 @@ var roleHarvester = {
                     }
                 }
             } else {
+		console.log("going home");
                 var target = Game.spawns['Hejmo'];
                 if (creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(target);

@@ -3,13 +3,15 @@ var _ = require('lodash');
 
 var dispatcher = {
     getDispatchedLocalSource: function(creep) {
-        var sources;
-        var room;
         let localRoom = creep.room;
         let localSources = _.filter(localRoom.find(FIND_SOURCES), (s) => {
             return isAvailableSource(s, localRoom, creep);
         });
-        return creep.pos.findClosestByPath(sources);
+	if (localSources.length == 0) {
+	    return localSources[0];
+	} else {
+	    return creep.pos.findClosestByPath(localSources);
+	}
     },
 
     getDispatchedExit: function(creep) {
@@ -20,7 +22,7 @@ var dispatcher = {
 };
 
 var isAvailableSource = function(source, room, creep) {
-    return source.energy != 0 && emptySpaces(room, source.pos, creep.pos) > 0;
+    return (source.energy != 0) && (emptySpaces(room, source.pos, creep.pos) > 0);
 };
 
 var emptySpaces = function(room, sourcePos, creepPos) {
