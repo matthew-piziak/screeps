@@ -15,7 +15,7 @@ var roleBuilder = {
         }
         if (creep.carry.energy == 0) {
             creep.memory.action = Action.CHARGING;
-            creep.say('charging');
+            creep.say('charge');
         }
         if (creep.carry.energy == creep.carryCapacity) {
             var targets = [];
@@ -26,10 +26,10 @@ var roleBuilder = {
             });
             if (targets.length == 0 || creep.room.controller.ticksToDowngrade < 3500) {
                 creep.memory.action = Action.UPGRADING;
-                creep.say('upgrading');
+                creep.say('upgrade');
             } else {
                 creep.memory.action = Action.BUILDING;
-                creep.say('building');
+                creep.say('build');
             }
         }
         if (creep.memory.action == Action.BUILDING) {
