@@ -2,21 +2,30 @@ var config = require('config');
 var _ = require('lodash');
 
 var dispatcher = {
-    get_dispatched_source: function(creep) {
+    getDispatchedSource: function(creep) {
         var sources;
-        let local_room = creep.room;
-        let local_sources = local_room.find(FIND_SOURCES);
-        if (local_sources) {
-            sources = local_sources;
-        }
-        sources = _.filter(sources, (s) => {
-            return (s.energy != 0);
+        var room;
+        let localRoom = creep.room;
+        let localSources = _.filter(localRoom.find(FIND_SOURCES), (s) => {
+            return isAvailableSource(s, localRoom, creep);
         });
-        sources = _.filter(sources, function(source) {
-            return emptySpaces(local_room, source.pos, creep.pos) > 0;
-        });
-	return creep.pos.findClosestByPath(sources);
+        if (localSources) {
+            sources = localSources;
+            room = localRoom;
+        } else {
+            let remoteRoom = Game.rooms['W13N69'];
+            let remoteSources = _.filter(remoteRoom.find(FIND_SOURCES), (s) => {
+                return isAvailableSource(s, remoteRoom, creep);
+            });
+            sources = remoteSources;
+            room = remoteRoom;
+        };
+        return creep.pos.findClosestByPath(sources);
     }
+};
+
+var isAvailableSource = function(source, room, creep) {
+    return source.energy != 0 && emptySpaces(room, source.pos, creep.pos) > 0;
 };
 
 var emptySpaces = function(room, sourcePos, creepPos) {
@@ -24,10 +33,10 @@ var emptySpaces = function(room, sourcePos, creepPos) {
     var tiles = room.lookAtArea(0, 0, 49, 49);
     for (var x = sourcePos.x - 1; x <= sourcePos.x + 1; x++)
         for (var y = sourcePos.y - 1; y <= sourcePos.y + 1; y++) {
-	    if (creepPos.x == x && creepPos.y == y) {
-		spaces++;
-		continue;
-	    }
+            if (creepPos.x == x && creepPos.y == y) {
+                spaces++;
+                continue;
+            }
             if (isPassable(tiles[y][x])) {
                 spaces++;
             }

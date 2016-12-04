@@ -11,20 +11,20 @@ var roleHarvester = {
             creep.memory.harvesting = false;
         }
         if (creep.memory.harvesting) {
-            if (!creep.memory.assigned_source) {
-                if (!dispatcher.get_dispatched_source(creep)) {
-                    creep.say("waiting");
+            if (!creep.memory.assignedSource) {
+                if (!dispatcher.getDispatchedSource(creep)) {
+                    creep.say("wait");
                 } else {
-                    creep.memory.assigned_source = dispatcher.get_dispatched_source(creep).id;
-                    creep.say("new source: " + creep.memory.assigned_source);
+                    creep.memory.assignedSource = dispatcher.getDispatchedSource(creep).id;
+                    creep.say("new source");
                 }
             } else {
-                if (creep.harvest(Game.getObjectById(creep.memory.assigned_source)) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(Game.getObjectById(creep.memory.assigned_source));
+                if (creep.harvest(Game.getObjectById(creep.memory.assignedSource)) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(Game.getObjectById(creep.memory.assignedSource));
                 }
             }
         } else {
-            creep.memory.assigned_source = null;
+            creep.memory.assignedSource = null;
             var targets = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_EXTENSION ||

@@ -8,11 +8,6 @@ var roleBuilder = {
             UPGRADING: 2,
             CHARGING: 3
         };
-        var num_harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
-        if (num_harvesters.length < config.NUM_HARVESTERS) {
-            creep.memory.role = 'harvester';
-            return;
-        }
         if (creep.carry.energy == 0) {
             creep.memory.action = Action.CHARGING;
             creep.say('charge');
