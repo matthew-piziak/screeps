@@ -1,5 +1,6 @@
 var config = require('config');
 var roadUtils = require('utils.road');
+var _ = require("lodash");
 
 var roleBuilder = {
     run: function(creep) {
@@ -12,14 +13,14 @@ var roleBuilder = {
             creep.memory.action = Action.CHARGING;
             creep.say('charge');
         }
-        if (creep.carry.energy == creep.carryCapacity) {
+        if (creep.memory.action == Action.CHARGING && creep.carry.energy > 0) {
             var targets = [];
             config.TARGET_ROOMS.forEach((r) => {
                 if (Game.rooms[r]) {
                     targets = targets.concat(Game.rooms[r].find(FIND_CONSTRUCTION_SITES));
                 }
             });
-            if (targets.length == 0 || creep.room.controller.ticksToDowngrade < 3500) {
+            if (targets.length == 0 || creep.room.controller.ticksToDowngrade < DOWNGRADE_TRIGGER) {
                 creep.memory.action = Action.UPGRADING;
                 creep.say('upgrade');
             } else {
@@ -51,7 +52,7 @@ var roleBuilder = {
             }
         } else { // CHARGING
             var spawn = Game.spawns['Hejmo'];
-            if (spawn.transferEnergy(creep, creep.carryCapacity) < 0) {
+            if (spawn.transferEnergy(creep, _.min([spawn.energy, creep.carryCapacity])) < 0) {
                 creep.moveTo(spawn);
             } else {
                 if (creep.body.length == config.CREEP_RECIPE.length) {
